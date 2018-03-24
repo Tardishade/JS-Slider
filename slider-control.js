@@ -162,8 +162,4 @@ jQuery(() => {
             }
         });
     }
-
-    func moveRight() {
-
-    }
 });
