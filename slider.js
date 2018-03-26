@@ -19,6 +19,7 @@ jQuery(() => {
     var numSlides = $slide.length;
     var windowWidth = $window.width();
     var sliderLeft = (windowWidth / 2) - ((numSlides * 50) / 2); 
+    var clicked = false;
 
 
     // Setup Functions
@@ -90,19 +91,21 @@ jQuery(() => {
 
     // Create a new timer object
     var interval = new slideTimer(() => {
-        moveRight();
+        // moveRight();
     }, slideDelay);
 
 
     // Control functions
 
     function moveLeft(pos = $container.position().left) {
+        console.log("Moving left");
         curSlide--;
         $container.stop(true, true);
         sliderClick(false, pos);
     }
 
     function moveRight(pos = $container.position().left) {
+        console.log("Moving right");
         curSlide++;
         $container.stop(true, true);
         sliderClick(true, pos);
@@ -116,12 +119,14 @@ jQuery(() => {
     }
 
     function sliderAnimate(newPos) {
+        console.log("newpos:" + newPos);
+        console.log("current:" + $container.position().left);
         colorBar();
         $container.animate({"left": newPos}, animateDelay, () => {
-            if (curSlide === 0) {
+            if (curSlide <= 0) {
                 $container.css("left", (-1 * (numSlides - 2) * windowWidth) + "px");
                 curSlide = numSlides - 2;
-            } else if (curSlide === numSlides - 1) {
+            } else if (curSlide >= numSlides - 1) {
                 $container.css("left", (-1 * windowWidth) + "px");
                 curSlide = 1;
             }
@@ -168,7 +173,6 @@ jQuery(() => {
         moveRight();
     });
 
-
     // Make the slider draggable (phew, not easy)
 
     // Check for a mouse click on the main container
@@ -178,26 +182,31 @@ jQuery(() => {
     // If the distance moved is +ve, trigger right button click, else left button click
 
     $container.on("mousedown touchstart", (clickEvent) => {
+        clicked = true;
         interval.stop();
         $container.stop(true, true);
         var startLeft = $container.position().left;
         var startX = clickEvent.pageX || clickEvent.originalEvent.touches[0].pageX;
         var diff = 0;
-        $window.on("mousemove touchmove", (moveEvent) => {
+        jQuery(this).on("mousemove touchmove", (moveEvent) => {
             interval.stop();
             var x = moveEvent.pageX; //|| moveEvent.originalEvent.touches[0].pageX;
             diff = x - startX;
-            $container.css("left", ((-1 * (curSlide * windowWidth) - (windowWidth / 2)) + (startX + diff)) + "px");
+            $container.css("left",  "+=" + (diff / (10)) + "px");
             console.log(startLeft + ":" + $container.position().left);
-        }).on("mouseup touchend", () => {
-            jQuery(this).off("mousemove touchmove mousedown touchstart");
-            console.log("mouseup: " + $container.position().left) ;
+        });
+        jQuery("body").on("mouseup touchend", () => {
+            if (clicked) {
+                jQuery(this).off("mousemove touchmove mousedown touchstart");
+                console.log("mouseup: " + $container.position().left) ;
 
-            if (diff > 8) {
-                moveLeft(startLeft);
-            } else if (diff < -8) {
-                moveRight(startLeft);
+                if (diff > 8) {
+                    moveLeft(startLeft);
+                } else if (diff < -8) {
+                    moveRight(startLeft);
+                }
             }
+            clicked = false;
         });
     });
 
