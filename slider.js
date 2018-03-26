@@ -200,9 +200,9 @@ jQuery(() => {
                 jQuery(this).off("mousemove touchmove mousedown touchstart");
                 console.log("mouseup: " + $container.position().left) ;
 
-                if (diff > 8) {
-                    moveLeft(startLeft);
-                } else if (diff < -8) {
+                if ($container.position().left > startLeft) {
+                    moveRight(startLeft);
+                } else {
                     moveRight(startLeft);
                 }
             }
