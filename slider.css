@@ -1,37 +1,37 @@
-#slider {
-  width: 100vw;
-  height: 923px;
+#slider-container {
+  width: 98vw;
+  height: 50vw;
   overflow: hidden;
+  position: relative;
 }
 
 #slider .slides {
-  display: block;
-  height: 923px;
-  margin: 0;
-  padding: 0;
   position: absolute;
   left: 0;
   top: 0;
+  padding: 0;
+  margin: 0;
 }
 
 #slider .slide {
-  float: left;
   list-style-type: none;
+  float: left;
   width: 100vw;
-  height: 923px;
+  height: 50vw;
 }
 
 #slider .slide img {
-  width: 100vw;
+  width: inherit;
 }
 
-#slider-container {
-  position: relative;
-}
+
+
+
 
 #slider-container .slider-button {
   position: absolute;
   top: 50%;
+  z-index: 5;
 }
 
 #slider-container #slide-left {

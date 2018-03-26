@@ -106,7 +106,7 @@ jQuery(() => {
             console.log("mouse moving");
             if (mouseDown) {
                 var x = moveEvent.pageX || moveEvent.originalEvent.touches[0].pageX;
-                diff = (startX - x);// / windowWidth * 70;
+                diff = (startX - x);
                 $container.css("margin-left", (-1 * (curSlide * windowWidth)) - diff);
             }
         });
