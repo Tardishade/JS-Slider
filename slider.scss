@@ -16,6 +16,9 @@ $visible-width: 100vw;
         height: $slide-height;
         margin: 0;
         padding: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
     }
 
     .slide {

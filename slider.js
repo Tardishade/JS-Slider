@@ -14,6 +14,8 @@ jQuery(() => {
 
     // Setup values
     var curSlide = 1;
+    var animateDelay = 1000;
+    var slideDelay = 3000;
     var numSlides = $slide.length;
     var windowWidth = $window.width();
     var sliderLeft = (windowWidth / 2) - ((numSlides * 50) / 2); 
@@ -24,7 +26,7 @@ jQuery(() => {
     // Increase width main container to slide no * window size and
     // setup duplicate end slide
     function increaseContainerSize() {
-        var newWidth = 100 * (numSlides + 2);
+        var newWidth = 100 * (numSlides);
         $container.css("width", newWidth.toString() + "%");
     }
 
@@ -43,11 +45,12 @@ jQuery(() => {
     // Duplicate the first slide and move it to the end.
     // Duplicate the last slide and move it to the front
     // Increase the number of slides listed
-    jQuery(".slides #1").clone().attr("id", "0").appendTo('.slides');
-    jQuery(".slides #" + numSlides).clone().attr("id", numSlides - 1).prependTo('.slides');
+    jQuery(".slides #1").clone().attr("id", numSlides + 1).appendTo('.slides');
+    jQuery(".slides #" + (numSlides)).clone().attr("id", 0).prependTo('.slides');
     $container.css({'left': windowWidth + "px"});
     $slide = jQuery(".slide");
-    numSlides += 2;
+    $container = jQuery("#slider .slides");
+    numSlides = $slide.length;
 
     // Execute all the functions
     increaseContainerSize();
@@ -55,17 +58,18 @@ jQuery(() => {
     leftPad();
     // var interval = setInterval(() => {
 
-    // }, animateDelay);
+    // }, slideDelay);
 
 
     // Control functions
     function sliderAnimate(newPos) {
-        $container.animate("left:" + newPos + "px", () => {
+        $container.animate({"left": newPos}, animateDelay, () => {
             if (Math.abs(newPos) === 0) {
                 $container.css("left", ((numSlides - 1) * windowWidth) + "px");
             } else if (Math.abs(newPos) === ((numSlides - 2) * windowWidth)) {
                 $container.css("left", (-1 * windowWidth) + "px");
             }
+            colorBar();
         });
     }
 
@@ -89,6 +93,7 @@ jQuery(() => {
     });
 
     $slide_left.click(() => {
+        console.info($slide);
         if (curSlide === 1) {
             curSlide = numSlides - 2;
         } else {
@@ -96,18 +101,20 @@ jQuery(() => {
         }
         $container.stop(true, true);
         var newPos = $container.position().left - (1 * windowWidth);
+        console.log("left:" + newPos);
         sliderAnimate(newPos);
         return false;
     });
 
     $slide_right.click(() => {
-        if (curSlide === 1) {
+        if (curSlide === numSlides - 2) {
             curSlide = 1;
         } else {
             curSlide++;
         }
         $container.stop(true, true);
         var newPos = $container.position().left + (1 * windowWidth);
+        console.log("right:" + newPos);
         sliderAnimate(newPos);
         return false;
     });
