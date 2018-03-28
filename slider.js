@@ -91,7 +91,7 @@ jQuery(() => {
 
     // Create a new timer object
     var interval = new slideTimer(() => {
-        // moveRight();
+        moveRight();
     }, slideDelay);
 
 
@@ -185,24 +185,26 @@ jQuery(() => {
         clicked = true;
         interval.stop();
         $container.stop(true, true);
-        var startLeft = $container.position().left;
+        var startLeft = curSlide * windowWidth * -1;
         var startX = clickEvent.pageX || clickEvent.originalEvent.touches[0].pageX;
         var diff = 0;
+        var x = 0;
         jQuery(this).on("mousemove touchmove", (moveEvent) => {
             interval.stop();
-            var x = moveEvent.pageX; //|| moveEvent.originalEvent.touches[0].pageX;
+            x += moveEvent.pageX; //|| moveEvent.originalEvent.touches[0].pageX;
             diff = x - startX;
-            $container.css("left",  "+=" + (diff / (10)) + "px");
+            $container.css("left",  $container.position().left - (diff / 600) + "px");
             console.log(startLeft + ":" + $container.position().left);
         });
         jQuery("body").on("mouseup touchend", () => {
             if (clicked) {
                 jQuery(this).off("mousemove touchmove mousedown touchstart");
-                console.log("mouseup: " + $container.position().left) ;
 
-                if (diff > 8) {
+                if (x > startX) {
+                    console.log("mouseup: Left " + x + " " + startX + " startLeft: " + $container.position().left);
                     moveLeft(startLeft);
-                } else if (diff < -8) {
+                } else if (x < startX) {
+                    console.log("mouseup: Right " + x + " " + startX + " startLeft: " + startLeft);
                     moveRight(startLeft);
                 }
             }
